@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="SOAPWebService" default="all" basedir=".">
+
+	<description> 
+		Builds the Sample Web Service component.
+    </description>
+
+	<!-- Reads the system environment variables and stores them in properties prefixed with "env" -->
+	<property environment="env" />
+
+	<!-- Information about the application -->
+	<property name="app.title" value="Sample Web Service" />
+
+	<!-- Common directory locations -->
+	<property name="DeploymentDir" value="${env.AXIS2_HOME}/repository/services" />
+	<property name="SampleWSDir" value="../SOAPWebService" />
+	<property name="classesSampleWS" value="./classes/SOAPWebService" />
+
+
+	<target name="clean">
+		<delete dir="${classesSampleWS}" />
+	</target>
+
+	<target name="compile" depends="clean">
+
+		<mkdir dir="${classesSampleWS}" />
+
+		<echo message="Compiling Sample Web Service ..." />
+		<javac destdir="${classesSampleWS}" debug="true" deprecation="false">
+			<src path="${SampleWSDir}/src" />
+			<include name="**/*.java" />
+		</javac>
+		<echo message="Completed Sample Web Service compiling." />
+
+	</target>
+
+	<target name="all" depends="compile">
+
+		<mkdir dir="${classesSampleWS}/META-INF" />
+		<copy file="${SampleWSDir}/services.xml" todir="${classesSampleWS}/META-INF" />
+
+		<zip destfile="${DeploymentDir}/samplews.aar" filesonly="false" whenempty="skip" basedir="${classesSampleWS}" />
+
+		<echo message="Completed packaging sample service" />
+
+	</target>
+
+</project>
